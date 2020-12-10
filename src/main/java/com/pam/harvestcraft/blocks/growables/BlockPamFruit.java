@@ -41,6 +41,12 @@ public class BlockPamFruit extends Block implements IGrowable, PamCropGrowable, 
 	public String BASE_STAGE_ID = null;
 
 	public static boolean fruitRemoval = false;//This is for Dynamic Trees since the fruits grow back completely
+
+	public static AxisAlignedBB[] boundingBoxes = new AxisAlignedBB[] {
+			new AxisAlignedBB(4 / 16.0, 8 / 16.0, 4 / 16.0, 12 / 16.0, 16 / 16.0, 12 / 16.0),
+			new AxisAlignedBB(2 / 16.0, 6 / 16.0, 2 / 16.0, 14 / 16.0, 16 / 16.0, 14 / 16.0),
+			new AxisAlignedBB(1 / 16.0, 2 / 16.0, 1 / 16.0, 15 / 16.0, 16 / 16.0, 15 / 16.0)
+	};
 	
 	public BlockPamFruit(BlockPamSapling sapling, Item fruit) {
 		super(Material.PLANTS);
@@ -109,7 +115,12 @@ public class BlockPamFruit extends Block implements IGrowable, PamCropGrowable, 
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
+		return boundingBoxes[state.getValue(AGE)];
+	}
+	
+	@Override
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
+		return boundingBoxes[state.getValue(AGE)].offset(pos);
 	}
 
 	@Nullable
