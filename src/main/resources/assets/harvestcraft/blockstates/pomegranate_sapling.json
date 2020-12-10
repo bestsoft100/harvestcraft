@@ -1,10 +1,7 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "harvestcraft:saplings/pomegranate_sapling"
-  },
-  "variants": {
-    "normal": [{}],
-    "inventory": [{}]
-  }
+	"variants": {
+		"normal": {
+			"model": "harvestcraft:pomegranate_sapling"
+		}
+	}
 }

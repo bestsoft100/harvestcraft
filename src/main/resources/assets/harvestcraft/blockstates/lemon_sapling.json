@@ -1,10 +1,7 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "harvestcraft:saplings/lemon_sapling"
-  },
-  "variants": {
-    "normal": [{}],
-    "inventory": [{}]
-  }
+	"variants": {
+		"normal": {
+			"model": "harvestcraft:lemon_sapling"
+		}
+	}
 }

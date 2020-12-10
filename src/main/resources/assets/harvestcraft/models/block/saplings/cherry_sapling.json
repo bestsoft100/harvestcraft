@@ -1,6 +1,0 @@
-{
-    "parent": "harvestcraft:block/pamscross",
-    "textures": {
-        "cross": "harvestcraft:blocks/saplings/cherry_sapling"
-    }
-}
