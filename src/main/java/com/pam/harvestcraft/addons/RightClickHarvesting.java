@@ -8,6 +8,8 @@ import com.pam.harvestcraft.HarvestCraft;
 import com.pam.harvestcraft.blocks.growables.BlockPamFruit;
 import com.pam.harvestcraft.blocks.growables.BlockPamFruitLog;
 import com.pam.harvestcraft.blocks.growables.PamCropGrowable;
+import com.pam.harvestcraft.item.items.ItemPamFood;
+import com.pam.harvestcraft.item.items.ItemPamItemSeeds;
 
 import net.minecraft.block.BlockCarrot;
 import net.minecraft.block.BlockCrops;
@@ -106,20 +108,8 @@ public class RightClickHarvesting {
 
 		final List<ItemStack> drops = crops.getDrops(world, blockPos, blockState, fortune);
 
-		// This removes exactly one seed from drops in order to make this more fair compared to vanilla
-		// as one seed stays planted.
-		final Item seedItem = crops.getItemDropped(blockState, world.rand, fortune);
-		if(seedItem != null)
-			for(Iterator<ItemStack> iterator = drops.iterator(); iterator.hasNext();) {
-				final ItemStack drop = iterator.next();
-
-				// Remove a seed, then break.
-				if(!(drop.getItem() == seedItem) || crops instanceof BlockCarrot || crops instanceof BlockPotato) {
-					iterator.remove();
-					break;
-				}
-			}
-
+		removeCropOrSeed(crops, drops);
+		
 		ForgeEventFactory.fireBlockHarvesting(drops, world, blockPos, blockState, fortune, 1f, false, player);
 
 		// Reset growth level
@@ -129,6 +119,30 @@ public class RightClickHarvesting {
 			dropItem(drop, world, blockPos);
 		}
 		
+	}
+	
+	//Removes one seed from drops to make it more balanced.
+	//If there are no seeds, one crop gets removed
+	private static void removeCropOrSeed(BlockCrops crops, List<ItemStack> drops) {
+		for(ItemStack itemStack : drops) {
+			//Should work for most items, there might be some items where a crop gets removed instead of a seed
+			if(isSeed(crops, itemStack)) {
+				itemStack.grow(-1);
+				return;
+			}
+		}
+		drops.get(0).grow(-1);
+	}
+	
+	private static boolean isSeed(BlockCrops crops, ItemStack itemStack) {
+		if(itemStack.getItem() instanceof ItemPamItemSeeds) {
+			return true;
+		}
+		if(itemStack.getItem() instanceof ItemPamFood) {
+			return false;
+		}
+		
+		return itemStack.getItem().getRegistryName().getResourcePath().contains("seed");
 	}
 
 	private static boolean canHarvestFruit(IBlockState blockState) {

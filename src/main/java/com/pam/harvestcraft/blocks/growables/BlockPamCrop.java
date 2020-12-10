@@ -49,10 +49,7 @@ public class BlockPamCrop extends BlockCrops implements IGrowable, IPlantable, P
 	private Item food;
 
 	public void setSeed(Item seed) {
-		if(ConfigHandler.cropsdropSeeds) {
-			this.seed = seed;
-		} else
-		this.seed = food;
+		this.seed = seed;
 	}
 
 	public void setFood(Item food) {
@@ -254,25 +251,17 @@ public class BlockPamCrop extends BlockCrops implements IGrowable, IPlantable, P
 
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-
-		final Random rand = world instanceof World ? ((World) world).rand : new Random();
-
-		final int age = getMetaFromState(state);
-
-		final int count = quantityDropped(state, fortune, rand);
-		for(int i = 0; i < count; i++) {
-			final Item item = this.getItemDropped(state, rand, fortune);
-			if(item != null) {
-				drops.add(new ItemStack(item, 1, this.damageDropped(state)));
-			}
+		if(ConfigHandler.cropsdropSeeds) {
+			drops.add(new ItemStack(seed));
+		}else {
+			drops.add(new ItemStack(food));
 		}
-
-		if(age >= getMatureAge()) {
-			for(int i = 0; i < 3 + fortune; ++i) {
-				if(rand.nextInt(2 * getMatureAge()) <= age) {
-					drops.add(new ItemStack(getSeed(), 1, 0));
-				}
-			}
+		
+		
+		World w = (World) world;
+		
+		if(state.getValue(CROPS_AGE) == MATURE_AGE) {
+			drops.add(new ItemStack(food, w.rand.nextInt(4) + 1));
 		}
 	}
 
